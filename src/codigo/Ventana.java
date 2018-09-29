@@ -49,6 +49,7 @@ public class Ventana extends javax.swing.JFrame {
         botonAdd = new javax.swing.JButton();
         botonSave = new javax.swing.JButton();
         botonCancel = new javax.swing.JButton();
+        botonClear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -73,6 +74,13 @@ public class Ventana extends javax.swing.JFrame {
 
         botonCancel.setText("Cancelar");
 
+        botonClear.setText("Clear");
+        botonClear.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                botonClearMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,6 +89,8 @@ public class Ventana extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(botonAdd)
+                .addGap(195, 195, 195)
+                .addComponent(botonClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(botonSave)
                 .addGap(59, 59, 59)
@@ -93,83 +103,97 @@ public class Ventana extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botonAdd)
                     .addComponent(botonSave)
-                    .addComponent(botonCancel))
+                    .addComponent(botonCancel)
+                    .addComponent(botonClear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     /*
     Método que recibe el archivo y lo imprime en el jTextArea
-    */
-    
-    public void leeArchivo(File fichero){
-        
-         try {
-            FileReader fr = new FileReader(fichero);    
+     */
+    public void leeArchivo(File fichero) {
+
+        try {
+            FileReader fr = new FileReader(fichero);
             BufferedReader br = new BufferedReader(fr);
             String i = "";
-            
-            while(i != null){
+
+            while (i != null) {
                 textArea.append(i);
                 textArea.append("\n");
-                i = br.readLine();  
-                
+                i = br.readLine();
+
             }
             br.close();
-            
+
             //Habilito los botones para poder guardar o cancelar el archivo en
             //edición
-            
             botonCancel.setVisible(true);
             botonSave.setVisible(true);
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
+
+    /*
+    El método escribeArchivo mete el contenido del área de texto dentro del archivo
+    que será guardado donde se indique en el jFileChooser.
+    */
     
-    public void escribeArchivo(File fichero){
-       
+    public void escribeArchivo(File fichero) {
+
         try {
-            FileWriter fw = new FileWriter(fichero); 
+            FileWriter fw = new FileWriter(fichero);
             BufferedWriter bw = new BufferedWriter(fw);
             textArea.write(bw);
             bw.close();
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
+    /*
+    Se lanza cuando el botón añadir es pulsado.
+    */
     
     private void botonAddMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonAddMousePressed
         jFileChooser1.showOpenDialog(this);
 
         File fichero = jFileChooser1.getSelectedFile();
         leeArchivo(fichero);
-       
-        
     }//GEN-LAST:event_botonAddMousePressed
 
+    /*
+    Se lanza cuando el botón guardar es pulsado.
+    */
+    
     private void botonSaveMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonSaveMousePressed
-        jFileChooser1.showSaveDialog(this);
-        
+
         int seleccion = jFileChooser1.showSaveDialog(this);
         if (seleccion == JFileChooser.APPROVE_OPTION) {
             //si llego aqui es que el usuario ha pulsado en guardar
-            //cuando ha salido el menú del jFileChooser
+            
+            //Creo el fichero que será escrito con la nueva información del texto.
             File fichero = jFileChooser1.getSelectedFile();
-            String nombre = fichero.getName();
-            String extension = nombre.substring(nombre.lastIndexOf('.') + 1);
+            //Escribo en 'fichero' la información que haya dentro del área de texto. 
+            escribeArchivo(fichero);
             
         }
     }//GEN-LAST:event_botonSaveMousePressed
+
+    /*
+    Limpia el área de texto.
+    */
+    private void botonClearMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_botonClearMousePressed
+        textArea.setText("");
+    }//GEN-LAST:event_botonClearMousePressed
 
     /**
      * @param args the command line arguments
@@ -209,6 +233,7 @@ public class Ventana extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonAdd;
     private javax.swing.JButton botonCancel;
+    private javax.swing.JButton botonClear;
     private javax.swing.JButton botonSave;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JScrollPane jScrollPane1;
